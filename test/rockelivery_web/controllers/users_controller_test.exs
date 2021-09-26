@@ -30,5 +30,28 @@ defmodule RockeliveryWeb.UsersControllerTest do
                }
              } = response
     end
+
+    test "when there is some error, returns the error", %{conn: conn} do
+      params = %{
+        "name" => "Joe Doe",
+        "email" => "joe.doe@mail.com"
+      }
+
+      response =
+        conn
+        |> post(Routes.users_path(conn, :create, params))
+        |> json_response(:bad_request)
+
+      expected_reponse = %{
+        "message" => %{
+          "address" => ["can't be blank"],
+          "age" => ["can't be blank"],
+          "cep" => ["can't be blank"],
+          "cpf" => ["can't be blank"]
+        }
+      }
+
+      assert response == expected_reponse
+    end
   end
 end
