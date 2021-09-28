@@ -69,5 +69,19 @@ defmodule RockeliveryWeb.UsersControllerTest do
 
       assert response == ""
     end
+
+    test "when there is no user with id, return an error", %{conn: conn} do
+      another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
+      insert(:user)
+
+      response =
+        conn
+        |> delete(Routes.users_path(conn, :delete, another_uuid))
+        |> response(:not_found)
+
+      expected_reponse = "{\"message\":\"User not found\"}"
+
+      assert response == expected_reponse
+    end
   end
 end
