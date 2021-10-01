@@ -27,4 +27,13 @@ defmodule Rockelivery.Factory do
       id: "f62732cd-7b02-4594-8e64-d172299381a1"
     }
   end
+
+  def item_params_factory do
+    %{
+      category: :drink,
+      description: "Coca-Cola 600mL",
+      price: Decimal.new("8.50"),
+      photo: "https://products_img/coca-cola-600"
+    }
+  end
 end
