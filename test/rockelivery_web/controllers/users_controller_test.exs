@@ -86,7 +86,7 @@ defmodule RockeliveryWeb.UsersControllerTest do
   end
 
   describe "show/2" do
-    test "when there is a user with the given id, returnss the user", %{conn: conn} do
+    test "when there is a user with the given id, returns the user", %{conn: conn} do
       id = "f62732cd-7b02-4594-8e64-d172299381a1"
       insert(:user)
 
@@ -117,6 +117,71 @@ defmodule RockeliveryWeb.UsersControllerTest do
         |> json_response(:not_found)
 
       expected_reponse = %{"message" => "User not found"}
+
+      assert response == expected_reponse
+    end
+  end
+
+  describe "update/2" do
+    test "when there is a user with the given id and all params is valid, update the user", %{
+      conn: conn
+    } do
+      id = "f62732cd-7b02-4594-8e64-d172299381a1"
+      insert(:user)
+
+      params = %{"age" => 20}
+
+      response =
+        conn
+        |> put(Routes.users_path(conn, :update, id, params))
+        |> json_response(:ok)
+
+      assert %{
+               "user" => %{
+                 "address" => "valid address",
+                 "age" => 20,
+                 "cpf" => "12345678900",
+                 "email" => "joe.doe@mail.com",
+                 "id" => _id,
+                 "name" => "Joe Doe"
+               }
+             } = response
+    end
+
+    test "when there is no user with id, return an error", %{conn: conn} do
+      another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
+      insert(:user)
+
+      params = %{"age" => 20}
+
+      response =
+        conn
+        |> put(Routes.users_path(conn, :update, another_uuid, params))
+        |> json_response(:not_found)
+
+      expected_reponse = %{"message" => "User not found"}
+
+      assert response == expected_reponse
+    end
+
+    test "when there is a user with the given id but there is some error, returns the error", %{
+      conn: conn
+    } do
+      id = "f62732cd-7b02-4594-8e64-d172299381a1"
+      insert(:user)
+
+      params = %{"age" => 16}
+
+      response =
+        conn
+        |> put(Routes.users_path(conn, :update, id, params))
+        |> json_response(:bad_request)
+
+      expected_reponse = %{
+        "message" => %{
+          "age" => ["must be greater than or equal to 18"]
+        }
+      }
 
       assert response == expected_reponse
     end
