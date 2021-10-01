@@ -1,6 +1,7 @@
 defmodule Rockelivery.Factory do
   use ExMachina.Ecto, repo: Rockelivery.Repo
 
+  alias Rockelivery.Item
   alias Rockelivery.User
 
   def user_params_factory do
@@ -34,6 +35,16 @@ defmodule Rockelivery.Factory do
       description: "Coca-Cola 600mL",
       price: Decimal.new("8.50"),
       photo: "https://products_img/coca-cola-600"
+    }
+  end
+
+  def item_factory do
+    %Item{
+      category: :drink,
+      description: "Coca-Cola 600mL",
+      price: Decimal.new("8.50"),
+      photo: "https://products_img/coca-cola-600",
+      id: "6e27d5e9-2856-48e2-b50f-ce8a7a73f0c1"
     }
   end
 end
