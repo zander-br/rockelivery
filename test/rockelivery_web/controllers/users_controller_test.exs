@@ -77,9 +77,46 @@ defmodule RockeliveryWeb.UsersControllerTest do
       response =
         conn
         |> delete(Routes.users_path(conn, :delete, another_uuid))
-        |> response(:not_found)
+        |> json_response(:not_found)
 
-      expected_reponse = "{\"message\":\"User not found\"}"
+      expected_reponse = %{"message" => "User not found"}
+
+      assert response == expected_reponse
+    end
+  end
+
+  describe "show/2" do
+    test "when there is a user with the given id, returnss the user", %{conn: conn} do
+      id = "f62732cd-7b02-4594-8e64-d172299381a1"
+      insert(:user)
+
+      response =
+        conn
+        |> get(Routes.users_path(conn, :show, id))
+        |> json_response(:ok)
+
+      assert %{
+               "user" => %{
+                 "id" => _id,
+                 "name" => "Joe Doe",
+                 "email" => "joe.doe@mail.com",
+                 "age" => 19,
+                 "cpf" => "12345678900",
+                 "address" => "valid address"
+               }
+             } = response
+    end
+
+    test "when there is no user with id, return an error", %{conn: conn} do
+      another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
+      insert(:user)
+
+      response =
+        conn
+        |> get(Routes.users_path(conn, :show, another_uuid))
+        |> json_response(:not_found)
+
+      expected_reponse = %{"message" => "User not found"}
 
       assert response == expected_reponse
     end
