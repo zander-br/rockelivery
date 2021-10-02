@@ -2,6 +2,9 @@ defmodule Rockelivery.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Ecto.Enum
+  alias Rockelivery.Order
+
   @primary_key {:id, :binary_id, autogenerate: true}
 
   @required_params [:category, :description, :price, :photo]
@@ -10,10 +13,12 @@ defmodule Rockelivery.Item do
   @derive {Jason.Encoder, only: @required_params ++ [:id]}
 
   schema "items" do
-    field :category, Ecto.Enum, values: @items_categories
+    field :category, Enum, values: @items_categories
     field :description, :string
     field :price, :decimal
     field :photo, :string
+
+    many_to_many :orders, Order, join_through: "orders_items"
 
     timestamps()
   end
