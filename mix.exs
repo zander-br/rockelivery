@@ -56,7 +56,9 @@ defmodule Rockelivery.MixProject do
       {:pbkdf2_elixir, "~> 1.4"},
       {:excoveralls, "~> 0.10", only: :test},
       {:ex_machina, "~> 2.7.0"},
-      {:decimal, "~> 2.0"}
+      {:decimal, "~> 2.0"},
+      {:tesla, "~> 1.4.3"},
+      {:hackney, "~> 1.17"}
     ]
   end
 
