@@ -2,7 +2,10 @@ defmodule Rockelivery.ViaCep.Client do
   use Tesla
 
   alias Rockelivery.Error
+  alias Rockelivery.ViaCep.Behaviour
   alias Tesla.Env
+
+  @behaviour Behaviour
 
   plug Tesla.Middleware.JSON
 
