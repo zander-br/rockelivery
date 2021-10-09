@@ -58,7 +58,8 @@ defmodule Rockelivery.MixProject do
       {:ex_machina, "~> 2.7.0"},
       {:decimal, "~> 2.0"},
       {:tesla, "~> 1.4.3"},
-      {:hackney, "~> 1.17"}
+      {:hackney, "~> 1.17"},
+      {:bypass, "~> 2.1", only: :test}
     ]
   end
 
