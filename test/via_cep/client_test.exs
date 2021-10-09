@@ -92,6 +92,20 @@ defmodule Rockelivery.ViaCep.ClientTest do
       assert result == expected_response
     end
 
+    test "when there is a generic error, returns an error", %{bypass: bypass} do
+      cep = "01001000"
+
+      url = endpoint_url(bypass.port)
+
+      Bypass.down(bypass)
+
+      response = Client.get_cep_info(url, cep)
+
+      expected_response = {:error, %Error{result: :econnrefused, status: :bad_request}}
+
+      assert response == expected_response
+    end
+
     defp endpoint_url(port), do: "http://localhost:#{port}/"
   end
 end
