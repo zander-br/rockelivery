@@ -72,6 +72,26 @@ defmodule Rockelivery.ViaCep.ClientTest do
       assert response == expected_response
     end
 
+    test "when the cep was not found, returns an error", %{bypass: bypass} do
+      cep = "00000000"
+
+      body = ~s({"erro": true})
+
+      url = endpoint_url(bypass.port)
+
+      Bypass.expect(bypass, "GET", "#{cep}/json/", fn conn ->
+        conn
+        |> Conn.put_resp_header("content-type", "application/json")
+        |> Conn.resp(200, body)
+      end)
+
+      result = Client.get_cep_info(url, cep)
+
+      expected_response = {:error, %Error{result: "CEP not found", status: :not_found}}
+
+      assert result == expected_response
+    end
+
     defp endpoint_url(port), do: "http://localhost:#{port}/"
   end
 end
