@@ -5,6 +5,7 @@ defmodule RockeliveryWeb.UsersControllerTest do
   import Rockelivery.Factory
 
   alias Rockelivery.ViaCep.ClientMock
+  alias RockeliveryWeb.Auth.Guardian
 
   describe "create/2" do
     test "when all params are valid, creates the user", %{conn: conn} do
@@ -65,9 +66,16 @@ defmodule RockeliveryWeb.UsersControllerTest do
   end
 
   describe "delete/2" do
+    setup %{conn: conn} do
+      user = insert(:user)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+      conn = put_req_header(conn, "authorization", "Bearer #{token}")
+
+      {:ok, conn: conn}
+    end
+
     test "when there is a user with the given id, deletes the user", %{conn: conn} do
       id = "f62732cd-7b02-4594-8e64-d172299381a1"
-      insert(:user)
 
       response =
         conn
@@ -79,7 +87,6 @@ defmodule RockeliveryWeb.UsersControllerTest do
 
     test "when there is no user with id, return an error", %{conn: conn} do
       another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
-      insert(:user)
 
       response =
         conn
@@ -93,9 +100,16 @@ defmodule RockeliveryWeb.UsersControllerTest do
   end
 
   describe "show/2" do
+    setup %{conn: conn} do
+      user = insert(:user)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+      conn = put_req_header(conn, "authorization", "Bearer #{token}")
+
+      {:ok, conn: conn}
+    end
+
     test "when there is a user with the given id, returns the user", %{conn: conn} do
       id = "f62732cd-7b02-4594-8e64-d172299381a1"
-      insert(:user)
 
       response =
         conn
@@ -116,7 +130,6 @@ defmodule RockeliveryWeb.UsersControllerTest do
 
     test "when there is no user with id, return an error", %{conn: conn} do
       another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
-      insert(:user)
 
       response =
         conn
@@ -130,11 +143,18 @@ defmodule RockeliveryWeb.UsersControllerTest do
   end
 
   describe "update/2" do
+    setup %{conn: conn} do
+      user = insert(:user)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+      conn = put_req_header(conn, "authorization", "Bearer #{token}")
+
+      {:ok, conn: conn}
+    end
+
     test "when there is a user with the given id and all params is valid, update the user", %{
       conn: conn
     } do
       id = "f62732cd-7b02-4594-8e64-d172299381a1"
-      insert(:user)
 
       params = %{"age" => 20}
 
@@ -157,7 +177,6 @@ defmodule RockeliveryWeb.UsersControllerTest do
 
     test "when there is no user with id, return an error", %{conn: conn} do
       another_uuid = "7356b866-2ac6-4373-b455-36dde62484be"
-      insert(:user)
 
       params = %{"age" => 20}
 
@@ -175,7 +194,6 @@ defmodule RockeliveryWeb.UsersControllerTest do
       conn: conn
     } do
       id = "f62732cd-7b02-4594-8e64-d172299381a1"
-      insert(:user)
 
       params = %{"age" => 16}
 
